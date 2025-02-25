@@ -4,8 +4,10 @@ include_directories(include)
 file(GLOB MY_SOURCES "src/*.c")
 add_executable(hello_world ${MY_SOURCES})
 
-# Make use of the HAL library
+# Make use of the libraries
 target_link_libraries(hello_world LINK_PRIVATE hal)
+target_link_libraries(hello_world LINK_PRIVATE lcd)
+target_link_libraries(hello_world LINK_PRIVATE lgpio)
 
 # Copy executable to final location (change `hello_world` to project name as needed)
 add_custom_command(TARGET hello_world POST_BUILD 
