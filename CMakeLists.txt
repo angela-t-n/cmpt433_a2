@@ -7,7 +7,7 @@ project(my_hello_world
 )
 
 # Compiler options (inherited by sub-folders)
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 99) # personal note: it was 11 before.
 add_compile_options(-Wall -Werror -Wpedantic -Wextra)
 add_compile_options(-fdiagnostics-color)
 
