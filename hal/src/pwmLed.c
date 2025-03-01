@@ -1,4 +1,4 @@
-#include "hal/led.h"
+#include "hal/pwmLed.h"
 #include <assert.h>
 
 // This one uses PWM instead.
@@ -14,5 +14,4 @@ void ledInit(void){
 void ledCleanup(void){
     assert(is_initialized);
     is_initialized = false;
-
 }

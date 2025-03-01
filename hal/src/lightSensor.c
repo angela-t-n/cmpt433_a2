@@ -140,7 +140,7 @@ uint16_t convRawRead(uint16_t rawVal)
 
 
 
-void lightSensor_Init(void){
+void lightSensor_init(void){
 
     // Noticed this was in the buttons.c so I decided to include it.
     assert(!is_initialized);
@@ -151,7 +151,7 @@ void lightSensor_Init(void){
     is_initialized = true;
 }
 
-void lightSensor_Cleanup(void){
+void lightSensor_cleanup(void){
     assert(is_initialized);
     
     // simply close the file (only clean-up we got tbh)

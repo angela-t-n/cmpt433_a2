@@ -58,7 +58,10 @@ static void on_counterclockwise(void)
 
 
 // Initialize Line A and B
-void rotary_Init(void){
+void rotary_init(void){
+    // initialize the gpio to use for the rotary
+    Gpio_initialize();
+
     // Initialize this once
     assert(!is_initialized);
 
@@ -70,7 +73,7 @@ void rotary_Init(void){
 }
 
 // Close Line A and B
-void rotary_Cleanup(void){
+void rotary_cleanup(void){
     // only cleanup if something has been initialized
     assert(is_initialized);
 

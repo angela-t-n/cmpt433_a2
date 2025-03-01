@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-void rotary_Init(void);
-void rotary_Cleanup(void);
+void rotary_init(void);
+void rotary_cleanup(void);
 
 void rotary_doState();
 

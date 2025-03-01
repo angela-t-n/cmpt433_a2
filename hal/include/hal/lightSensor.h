@@ -7,8 +7,8 @@
 // based on provided example header file for sampler.
 
 
-void lightSensor_Init(void);
-void lightSensor_Cleanup(void);
+void lightSensor_init(void);
+void lightSensor_cleanup(void);
 
 // values seem to go between 0 to maybe 1650 as well.
 // It kinda hovers around 300~500 due to light polution though

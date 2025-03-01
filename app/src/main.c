@@ -46,7 +46,7 @@ void printTestLightSensor(){
 
 void testLightSensor()
 {
-    lightSensor_Init();
+    lightSensor_init();
 
     int counter = 0;
     while (true)
@@ -67,7 +67,7 @@ void testLightSensor()
         milisecondSleep(1);
     }
 
-    lightSensor_Cleanup();
+    lightSensor_cleanup();
 }
 
 
@@ -84,6 +84,19 @@ void testLCD(){
     lcdDisplay_cleanup();
 }
 
+
+
+void testRotary(){
+    rotary_init();
+
+    while(true){
+        // read it every 10 ms
+        rotary_doState();
+        milisecondSleep(10);
+    }
+
+    rotary_cleanup();
+}
 
 int main(void)
 {
@@ -111,21 +124,13 @@ int main(void)
     // WORKS testing light sensor
     //testLightSensor();
 
-    testLCD();
+    // TODO: pwmLED
 
-    /* //GIVING UP ON SPINNY
-    // testing spinny
-    Gpio_initialize();
-    rotary_Init();
+    // WORKS
+    //testLCD();
 
-    while(true){
-        rotary_doState();
-        milisecondSleep(10);
-    }
-
-    rotary_Cleanup();
-    Gpio_cleanup();
-    */
+    // TODO: rotary :(
+    //testRotary();
 
     return 0;
 }
