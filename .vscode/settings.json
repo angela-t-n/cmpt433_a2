@@ -3,6 +3,7 @@
     "files.associations": {
         "lightsensor.h": "c",
         "gpio.h": "c",
-        "sleephelper.h": "c"
+        "sleephelper.h": "c",
+        "lcddisplay.h": "c"
     }
 }

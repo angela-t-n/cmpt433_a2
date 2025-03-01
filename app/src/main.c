@@ -6,6 +6,8 @@
 #include "hal/btn_statemachine.h"
 #include "hal/lightSensor.h"
 #include "hal/rotary.h"
+#include "hal/lcdDisplay.h"
+
 #include "sleepHelper.h"
 
 #include <time.h>
@@ -68,8 +70,25 @@ void testLightSensor()
     lightSensor_Cleanup();
 }
 
+
+void testLCD(){
+    lcdDisplay_init();
+
+    //char buff[] = "meow meow nnyaa nyaa\nmeow meow nnyaa nyaa\nmeow meow nnyaa nyaa";
+    // 21 characters wide
+    // 12 characters long
+    char buff[] = "123456789012345678901\n2\n3\n4\n5\n6\n7\n8\n9\n10\n1111111111111111111111111 222222222222222223 333333333333 ";
+    lcdDisplay_updateScreen(buff);
+
+    
+    lcdDisplay_cleanup();
+}
+
+
 int main(void)
 {
+    
+
     /* irrelavant button press state machine example
     // Startup & Initialization
     Gpio_initialize();
@@ -90,7 +109,9 @@ int main(void)
     */
 
     // WORKS testing light sensor
-    testLightSensor();
+    //testLightSensor();
+
+    testLCD();
 
     /* //GIVING UP ON SPINNY
     // testing spinny
