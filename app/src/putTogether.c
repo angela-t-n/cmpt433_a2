@@ -340,11 +340,9 @@ void putTogether_updateDisplayEverySecond(){
     buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Max ms @ %.1f\n", MAX_ADC_MS);
 
     // as a bonus, the direction the STUPID stick is spinning
-    buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Rotary:\n");
+    buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Rotary:\n\n");
     buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Dir @ %s\n", rotary_getDirection());
     snprintf(buff + buffOffset, max - buffOffset, "Counter @ %d\n", rotary_getCounterVal());
-
-
 
 
     // put it into the display
@@ -600,5 +598,8 @@ void putTogether_runLoop(){
     // wait for both threads to finish before going byebye
     pthread_join(udpThread, NULL);
     pthread_join(lightThread, NULL);
+
+    // gets stuck on doState so u needa spin it
+    printf("JIggle the joystick to free it from doState please!\n");
     pthread_join(rotaryPWMThread, NULL);
 }
