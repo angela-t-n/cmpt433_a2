@@ -17,3 +17,8 @@ void milisecondSleep(long long delayInMs)
     struct timespec reqDelay = {seconds, nanoseconds};
     nanosleep(&reqDelay, (struct timespec *)NULL);
 }
+
+void secondSleep(int delayInSeconds){
+    // there's 1000 ms in 1 sec
+    milisecondSleep(1000 * delayInSeconds);
+}

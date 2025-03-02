@@ -3,7 +3,12 @@
 
 #include <stdbool.h>
 
-void led_init(void);
-void led_cleanup(void);
+void pwmLed_init(void);
+void pwmLed_cleanup(void);
+
+void pwmLed_on();
+void pwmLed_off();
+
+void pwmLed_setFlash(int);
 
 #endif

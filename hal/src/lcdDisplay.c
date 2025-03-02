@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <assert.h>
 
+// this is using the provided example code for the assignment
 
 static UWORD *s_fb;
 static bool isInitialized = false;
@@ -17,6 +18,8 @@ static bool isInitialized = false;
 void lcdDisplay_init()
 {
     assert(!isInitialized);
+    // I wanted intialize outputs for everything.
+    printf("Intializing LCD Display...\n");
 
     // Exception handling:ctrl + c
     // signal(SIGINT, Handler_1IN54_LCD);
@@ -42,15 +45,28 @@ void lcdDisplay_init()
     }
     isInitialized = true;
 }
+
+
 void lcdDisplay_cleanup()
 {
     assert(isInitialized);
+    printf("Stopping LCD Display...\n");
 
     // Module Exit
     free(s_fb);
     s_fb = NULL;
 	DEV_ModuleExit();
     isInitialized = false;
+}
+
+// literally just paints it white LOL
+void lcdDisplay_clearScreen(){
+    Paint_NewImage(s_fb, LCD_1IN54_WIDTH, LCD_1IN54_HEIGHT, 0, WHITE, 16);
+    Paint_Clear(WHITE);
+
+    // Send the RAM frame buffer to the LCD (actually display it)
+    // Option 1) Full screen refresh (~1 update / second)
+    LCD_1IN54_Display(s_fb);
 }
 
 void lcdDisplay_updateScreen(char* message)
@@ -64,8 +80,9 @@ void lcdDisplay_updateScreen(char* message)
     int y = starty;
 
     // Initialize the RAM frame buffer to be blank (white)
-    Paint_NewImage(s_fb, LCD_1IN54_WIDTH, LCD_1IN54_HEIGHT, 0, WHITE, 16);
-    Paint_Clear(WHITE);
+    //Paint_NewImage(s_fb, LCD_1IN54_WIDTH, LCD_1IN54_HEIGHT, 0, WHITE, 16);
+    //Paint_Clear(WHITE);
+    lcdDisplay_clearScreen();
 
     // Draw into the RAM frame buffer
     // WARNING: Don't print strings with `\n`; will crash!

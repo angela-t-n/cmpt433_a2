@@ -7,6 +7,7 @@
 #include "hal/lightSensor.h"
 #include "hal/rotary.h"
 #include "hal/lcdDisplay.h"
+#include "hal/pwmLed.h"
 
 #include "sleepHelper.h"
 
@@ -44,6 +45,7 @@ void printTestLightSensor(){
     printf("Current Average: %f, \t total Samples: %lld\n", avg, total);
 }
 
+// 1.1
 void testLightSensor()
 {
     lightSensor_init();
@@ -70,7 +72,46 @@ void testLightSensor()
     lightSensor_cleanup();
 }
 
+// 1.2 is UDP
 
+// 1.3 analyze for light dips
+
+// 1.4 nice terminal output
+
+// 1.5
+// it is what it is
+void testRotary(){
+    rotary_init();
+
+    while(true){
+        // read it every 10 ms
+        rotary_doState();
+        milisecondSleep(20);
+    }
+
+    rotary_cleanup();
+}
+
+void testPwmLed(){
+    pwmLed_init();
+
+    pwmLed_setFlash(5);
+
+    pwmLed_on();
+
+    // stay on for like 3 seconds
+    secondSleep(3);
+
+    // turn it off
+    pwmLed_off();
+
+    // clean
+    pwmLed_cleanup();
+}
+
+
+
+// 1.6
 void testLCD(){
     lcdDisplay_init();
 
@@ -80,57 +121,29 @@ void testLCD(){
     char buff[] = "123456789012345678901\n2\n3\n4\n5\n6\n7\n8\n9\n10\n1111111111111111111111111 222222222222222223 333333333333 ";
     lcdDisplay_updateScreen(buff);
 
-    
+    // after like 3 seconds, clear the screen
+    secondSleep(3);
+
+    lcdDisplay_clearScreen();
+
     lcdDisplay_cleanup();
 }
 
 
+// 1.7 use the periodTimer.h/.c provided on the website
 
-void testRotary(){
-    rotary_init();
+// end of part 1. Submit as a tar
 
-    while(true){
-        // read it every 10 ms
-        rotary_doState();
-        milisecondSleep(10);
-    }
 
-    rotary_cleanup();
-}
+// 2. is not part of this program
+// instead, i gdb debug the noworky.c file
+// submit the debugging session text
+// take a screenshot of debugging it in vscode
+
 
 int main(void)
 {
     
-
-    /* irrelavant button press state machine example
-    // Startup & Initialization
-    Gpio_initialize();
-    BtnStateMachine_init();
-
-    // TESTING State machine
-    while (true) {
-        // TODO: This should be on it's own thread!
-        BtnStateMachine_doState();
-
-        printf("Counter at %+5d\n", BtnStateMachine_getValue());
-    }
-
-    BtnStateMachine_cleanup();
-    Gpio_cleanup();
-
-    printf("\nDone!\n");
-    */
-
-    // WORKS testing light sensor
-    //testLightSensor();
-
-    // TODO: pwmLED
-
-    // WORKS
-    //testLCD();
-
-    // TODO: rotary :(
-    //testRotary();
 
     return 0;
 }

@@ -145,6 +145,9 @@ void lightSensor_init(void){
     // Noticed this was in the buttons.c so I decided to include it.
     assert(!is_initialized);
 
+    // I wanted intialize outputs for everything.
+    printf("Intializing Light Sensor...\n");
+
     // start initializing the light sensor
     i2c_file_desc = init_i2c_bus(I2CDRV_LINUX_BUS, I2C_DEVICE_ADDRESS);
     
@@ -153,6 +156,7 @@ void lightSensor_init(void){
 
 void lightSensor_cleanup(void){
     assert(is_initialized);
+    printf("Stopping Light Sensor...\n");
     
     // simply close the file (only clean-up we got tbh)
     close(i2c_file_desc);

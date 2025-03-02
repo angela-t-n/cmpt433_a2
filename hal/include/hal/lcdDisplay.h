@@ -5,5 +5,6 @@ void lcdDisplay_init();
 void lcdDisplay_cleanup();
 
 void lcdDisplay_updateScreen(char* message);
+void lcdDisplay_clearScreen();
 
 #endif

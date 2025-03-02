@@ -38,7 +38,8 @@ struct state {
 */
 static void on_release(void)
 {
-    counter++;
+    printf("Rotary Button Pressed!\n");
+    //counter++;
 }
 
 struct state states[] = {
@@ -63,12 +64,17 @@ struct state* pCurrentState = &states[0];
 void BtnStateMachine_init()
 {
     assert(!isInitialized);
+
+    printf("Intializing Rotary Button...\n");
+
     s_lineBtn = Gpio_openForEvents(GPIO_CHIP, GPIO_LINE_NUMBER);
     isInitialized = true;
 }
 void BtnStateMachine_cleanup()
 {
     assert(isInitialized);
+    printf("Stopping Rotary Button...\n");
+    
     isInitialized = false;
     Gpio_close(s_lineBtn);
 }

@@ -6,6 +6,8 @@
 void rotary_init(void);
 void rotary_cleanup(void);
 
+int rotary_getCounterVal();
+
 void rotary_doState();
 
 #endif
