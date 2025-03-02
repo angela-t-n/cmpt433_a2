@@ -225,7 +225,7 @@ void putTogether_outputEverySecond(){
 
     // d) Number of light dips in total
     putTogether_updateLightDips();
-    printf("Light Dips: %d\n", dips);
+    printf("Light Dips: %d\t", dips);
 
     // e) periodTimer.h output
     Period_statistics_t stats;
@@ -337,10 +337,10 @@ void putTogether_updateDisplayEverySecond(){
     buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Flash @ %d\n", pwmLed_getHz());
     buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Dips @ %d\n", dips);
     //double TODOMS = 0.0;
-    buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Max ms @ %.1f\n", MAX_ADC_MS);
+    buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Max ms @ %.1f\n \n", MAX_ADC_MS);
 
     // as a bonus, the direction the STUPID stick is spinning
-    buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Rotary:\n\n");
+    buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Rotary:\n");
     buffOffset += snprintf(buff + buffOffset, max - buffOffset, "Dir @ %s\n", rotary_getDirection());
     snprintf(buff + buffOffset, max - buffOffset, "Counter @ %d\n", rotary_getCounterVal());
 
@@ -378,8 +378,8 @@ void* putTogether_rotaryAndPWM_thread(void* arg){
         
         // update the pwm led based on the rotary counter
         // position, btw that rotary is scuffed
-        rotary_doState();
         putTogether_readRotaryUpdatePWM();
+        rotary_doState();
 
     }
 
@@ -598,7 +598,7 @@ void putTogether_runLoop(){
     // wait for both threads to finish before going byebye
     pthread_join(udpThread, NULL);
     pthread_join(lightThread, NULL);
-
+    
     // gets stuck on doState so u needa spin it
     printf("JIggle the joystick to free it from doState please!\n");
     pthread_join(rotaryPWMThread, NULL);
