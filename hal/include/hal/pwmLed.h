@@ -10,5 +10,6 @@ void pwmLed_on();
 void pwmLed_off();
 
 void pwmLed_setFlash(int);
+int pwmLed_getHz(void);
 
 #endif

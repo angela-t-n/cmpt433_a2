@@ -52,10 +52,17 @@ void lcdDisplay_cleanup()
     assert(isInitialized);
     printf("Stopping LCD Display...\n");
 
+    // start calling clears to see if it'd clear the malloc thing
+    Paint_Clear(WHITE);
+    LCD_1IN54_Clear(WHITE);
+
     // Module Exit
+    printf("Stopping Dev Module (this for some reason fails to free something)...\n");
+	DEV_ModuleExit();
+
     free(s_fb);
     s_fb = NULL;
-	DEV_ModuleExit();
+
     isInitialized = false;
 }
 
@@ -80,9 +87,8 @@ void lcdDisplay_updateScreen(char* message)
     int y = starty;
 
     // Initialize the RAM frame buffer to be blank (white)
-    //Paint_NewImage(s_fb, LCD_1IN54_WIDTH, LCD_1IN54_HEIGHT, 0, WHITE, 16);
-    //Paint_Clear(WHITE);
-    lcdDisplay_clearScreen();
+    Paint_NewImage(s_fb, LCD_1IN54_WIDTH, LCD_1IN54_HEIGHT, 0, WHITE, 16);
+    Paint_Clear(WHITE);
 
     // Draw into the RAM frame buffer
     // WARNING: Don't print strings with `\n`; will crash!

@@ -13,12 +13,13 @@
 #define MAX_PERIOD_CYCLE    469754879
 #define MIN_PERIOD_CYCLE    0
 
-#define MIN_HZ              0
+#define MIN_HZ              1
 #define MAX_HZ              1000000000
 
 
 // Allow module to ensure it has been initialized (once!)
 static bool is_initialized = false;
+static int currentHz = 0;
 
 void pwmLed_init(void){
     assert(!is_initialized);
@@ -35,6 +36,9 @@ void pwmLed_cleanup(void){
     is_initialized = false;
 }
 
+int pwmLed_getHz(){
+    return currentHz;
+}
 
 void writeValueToFile(const char* fileName, const int val){
     // open up the file at that file to write to
@@ -58,6 +62,13 @@ void writeValueToFile(const char* fileName, const int val){
 void pwmLed_off(){
     // just write 0 to the enable file
     writeValueToFile(PWM_GPIO_12_PATH ENABLE_FILE, 0);
+
+    // set the numbers to 0
+    writeValueToFile(PWM_GPIO_12_PATH PERIOD_FILE, 0);
+    writeValueToFile(PWM_GPIO_12_PATH DUTY_CYCLE_FILE, 0);
+    
+    // change the current hz
+    currentHz = 0;
 }
 
 // turns on the pwm led
@@ -70,8 +81,18 @@ void pwmLed_on(){
 // max is 1 gigahz
 void pwmLed_setFlash(int hz){
     // make sure it's between those two numbers
-    if (hz < MIN_HZ && hz > MAX_HZ){
-        printf("Out of hz bounds :( either too fast or negative! \n");
+    // if it isn't then make it the min or max
+    if (hz < MIN_HZ){
+        hz = MIN_HZ;
+    }
+
+    if (hz > MAX_HZ){
+        hz = MAX_HZ;
+    }
+
+    // if it's the same as the current hz, just don't do anything
+    // this is to prevent flashing delays
+    if(hz == currentHz){
         return;
     }
 
@@ -85,4 +106,7 @@ void pwmLed_setFlash(int hz){
     // write it to the files
     writeValueToFile(PWM_GPIO_12_PATH PERIOD_FILE, periodNanoseconds);
     writeValueToFile(PWM_GPIO_12_PATH DUTY_CYCLE_FILE, dutyCycleNanoseconds);
+
+    // store it
+    currentHz = hz;
 }

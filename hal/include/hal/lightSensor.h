@@ -13,7 +13,10 @@ void lightSensor_cleanup(void);
 // values seem to go between 0 to maybe 1650 as well.
 // It kinda hovers around 300~500 due to light polution though
 // until I shine a flashlight on it or use the LED right across from it
-uint16_t lightSensor_readVal(void);
+double lightSensor_readVal(void);
+
+// read and stores it into a giant buffer thing.
+void lightSensor_readAndStore(void);
 
 // Must be called once every 1s.
 // Moves the samples that it has been collecting this second into

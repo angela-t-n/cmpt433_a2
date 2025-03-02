@@ -34,12 +34,16 @@ static int i2c_file_desc = -1;
 
 // Save the history of light sensor readings
 // 100 max readings, 1 reading per ms (1 second == 100 ms)
-#define MAX_HISTORY_SIZE 100
-static double lightHistory[MAX_HISTORY_SIZE];
+#define MAX_HISTORY_SIZE 1000
+static double currentSamples[MAX_HISTORY_SIZE];
+
 static double prevSecHistory[MAX_HISTORY_SIZE];
 
 // the current index to store
-static int historyIndex = 0;
+static int currentSampleIndex = 0;
+
+// size of the prevSecHistory
+static int prevSecHistorySize = 0;
 
 // total samples overtime
 static long long totalSamples = 0;
@@ -164,8 +168,22 @@ void lightSensor_cleanup(void){
 }
 
 
+// I gave up putting this outside, im just gonna store it as the voltage
+#define MAX_ADC_VAL  4095.0
+#define ADV_VOLTAGE  3.3
 
-uint16_t lightSensor_readVal(void){
+double convertToVoltage(uint16_t rawADC){
+    /*Zen Hat has a 12 bit ADC:
+    – It reads a voltage and gives a number
+    between 0 and 212-1 (=4095)*/
+    
+    // it's also samples it between 0 to 3.3v
+    // so we need to scale it by 3.3
+    return (rawADC / MAX_ADC_VAL) * ADV_VOLTAGE;
+
+}
+
+double lightSensor_readVal(void){
     // Using the numbers for the i2c we already defined, read it.
     // remember: we're using ch 2 for the light reader.
     write_i2c_reg16(i2c_file_desc, REG_CONFIGURATION, TLA2024_CHANNEL_CONF_2);
@@ -174,28 +192,37 @@ uint16_t lightSensor_readVal(void){
     uint16_t raw_read = read_i2c_reg16(i2c_file_desc, REG_DATA);
 
     // once read, convert the bytes
-    return convRawRead(raw_read);
+    uint16_t swapped = convRawRead(raw_read);
+
+    // and then send it off as a voltage
+    double result = convertToVoltage(swapped);
+
+    //printf("Volt: %f, Raw:%d\n", result, swapped);
+
+    return result;
+}
+
+void lightSensor_moveCurrentDataToHistory(void){
+    // save the size
+    prevSecHistorySize = currentSampleIndex;
+
+    // copy it to the previous history
+    for(int i = 0 ; i < currentSampleIndex ; i++){
+        prevSecHistory[i] = currentSamples[i];
+    }
+
+    // reset sample index to overwrite values
+    currentSampleIndex = 0;
 }
 
 
 
-void lightSensor_moveCurrentDataToHistory(void){
-    // given a piece of data, we should put it into the array.
-    // Base case 0: array is full
-    // loop back around since it's not a malloc'd arr.
-    if(historyIndex == MAX_HISTORY_SIZE){
-        // copy it to the previous history
-        for(int i = 0 ; i < MAX_HISTORY_SIZE ; i++){
-            prevSecHistory[i] = lightHistory[i];
-        }
-
-        // reset history index to overwrite values
-        historyIndex = 0;
-    }
+void lightSensor_readAndStore(void){
+    // given a piece of data, we should put it into the array!
 
     // chuck the data into the array at that index
-    uint16_t currReading = lightSensor_readVal();
-    lightHistory[historyIndex++] = currReading;
+    double currReading = lightSensor_readVal();
+    currentSamples[currentSampleIndex++] = currReading;
 
     // increment the number of logged history
     totalSamples++;
@@ -227,13 +254,13 @@ void lightSensor_moveCurrentDataToHistory(void){
 int lightSensor_getHistorySize(void){
     // just return the current history index.
     // that's the "size" of the array.
-    return historyIndex;
+    return prevSecHistorySize;
 }
 
 double* lightSensor_getHistory(int *size){
    // make a double arr malloc'd with exactly the history size.
-   *size = MAX_HISTORY_SIZE;
-   double *historyCopy = malloc(MAX_HISTORY_SIZE *  sizeof(double));
+   *size = prevSecHistorySize;
+   double *historyCopy = malloc(prevSecHistorySize *  sizeof(double));
 
    // if it was unable to malloc:
    if (historyCopy == NULL)
@@ -243,14 +270,13 @@ double* lightSensor_getHistory(int *size){
     }
 
    // perform a deep copy, i wanna do a deep dive into my bed rn im so sleepy it's 4 am send help
-   for(int i = 0 ; i < MAX_HISTORY_SIZE ; i++){
+   for(int i = 0 ; i < prevSecHistorySize ; i++){
         historyCopy[i] = prevSecHistory[i];
    }
 
    // give it back
    return historyCopy;
 }
-
 
 
 // Get the average light level (not tied to the history).

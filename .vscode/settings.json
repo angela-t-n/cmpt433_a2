@@ -4,6 +4,8 @@
         "lightsensor.h": "c",
         "gpio.h": "c",
         "sleephelper.h": "c",
-        "lcddisplay.h": "c"
+        "lcddisplay.h": "c",
+        "puttogether.h": "c",
+        "unistd.h": "c"
     }
 }

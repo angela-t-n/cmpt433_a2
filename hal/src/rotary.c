@@ -58,49 +58,56 @@ struct rotaryState {
 // flags to determine which way it started with
 // decided to make it an int counter instead of a bool :(
 // hoping that'd improve it's "accuracy"
-static int isCW = 0;
-static int isCCW = 0;
+static bool isCW = false;
+static bool isCCW = false;
 
-static void flag_cw(void)
-{
-    isCW++;
-    isCCW--;
+static char* direction = "not moved yet";
+
+char* rotary_getDirection(){
+    return direction;
 }
 
-static void flag_ccw(void)
+void flag_cw(void)
 {
-    isCCW++;
-    isCW--;
+    isCW = true;
+    isCCW = false;
+}
+
+void flag_ccw(void)
+{
+    isCW = false;
+    isCCW = true;
 }
 
 // bro it keeps sliding
-#define MIN_ROTARY_THRESHOLD 4
 
 // Instead of an on_release, I made 2 functions to do diff things
 // clockwise or counter clockwise
 static void on_clockwise(void){
-    if(isCW > isCCW 
-        && isCW > MIN_ROTARY_THRESHOLD){
-        printf("Rotated Clockwise\n");
-        counter++;
+    if(isCW){
+        //printf("Rotated Clockwise\n");
+        ++counter;
+        direction = "CW";
 
-        printf("Counter: %d\n\n", counter);
+        //printf("Counter: %d\n\n", counter);
 
         // reset the rotaryStates
-        isCCW = isCW = 0;
+        isCCW = isCW = false;
     }
 }
 
 static void on_counterclockwise(void){
-    if(isCW < isCCW 
-        && isCCW > MIN_ROTARY_THRESHOLD){
-        printf("Rotated Counter Clockwise\n");
-        counter--;
+    if(isCCW){
+        //printf("Rotated Counter Clockwise\n");
+        // lets not make it too negative
+        if(counter > -10)
+            --counter;
+        direction = "CCW";
 
-        printf("Counter: %d\n\n", counter);
+        //printf("Counter: %d\n\n", counter);
 
         // reset the rotaryStates
-        isCCW = isCW = 0;
+        isCCW = isCW = false;
     }
 }
 
@@ -260,6 +267,10 @@ void rotary_readLine(struct GpioLine* s_line, unsigned int GPIO_lineNum){
         }
 
         // prints the current state index only if it changed while spinning
+        #if 1
+        pCurrentRotaryState = protaryStateEvent->pNextrotaryState;
+        #endif
+
         #if 0
         int prevIndex = (int)(pCurrentRotaryState - rotaryStates);
 
@@ -272,7 +283,6 @@ void rotary_readLine(struct GpioLine* s_line, unsigned int GPIO_lineNum){
             printf("Current State: %d For line: %d\n", currentStateIndex, GPIO_lineNum);
 
         #endif
-
     }
 }
 
