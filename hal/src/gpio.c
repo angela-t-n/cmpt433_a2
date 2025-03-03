@@ -95,6 +95,38 @@ int Gpio_waitForLineChange(
     // TODO: Add more lines if needed
     gpiod_line_bulk_add(&bulkWait, (struct gpiod_line*)line1);
     
+    
+    gpiod_line_request_bulk_both_edges_events(&bulkWait, "Event Waiting");
+
+
+    int result = gpiod_line_event_wait_bulk(&bulkWait, NULL, bulkEvents);
+    if ( result == -1) {
+        perror("Error waiting on lines for event waiting");
+        exit(EXIT_FAILURE);
+    }
+
+    int numEvents = gpiod_line_bulk_num_lines(bulkEvents);
+    return numEvents;
+}
+
+// Returns the number of events
+// im so stupid holy moly that was like 30 hours of my life gone
+// I POLL FOR 2 LINES AT THE SAME TIME HERE AHGIOWHEFIODHIFOSHDIOFHSDIFHIS
+int Gpio_waitForLineBOTHChange(
+    struct GpioLine* line1, 
+    struct GpioLine* line2, 
+    struct gpiod_line_bulk *bulkEvents
+) {
+    assert(s_isInitialized);
+
+    // Source: https://people.eng.unimelb.edu.au/pbeuchat/asclinic/software/building_block_gpio_encoder_counting.html   
+    struct gpiod_line_bulk bulkWait;
+    gpiod_line_bulk_init(&bulkWait);
+    
+    // TODO: Add more lines if needed
+    gpiod_line_bulk_add(&bulkWait, (struct gpiod_line*)line1);
+    gpiod_line_bulk_add(&bulkWait, (struct gpiod_line*)line2);
+    
     gpiod_line_request_bulk_both_edges_events(&bulkWait, "Event Waiting");
 
 

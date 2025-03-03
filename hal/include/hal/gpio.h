@@ -25,6 +25,12 @@ void Gpio_cleanup(void);
 //  pinNumber: such as 15
 struct GpioLine* Gpio_openForEvents(enum eGpioChips chip, int pinNumber);
 
+int Gpio_waitForLineBOTHChange(
+    struct GpioLine* line1, 
+    struct GpioLine* line2, 
+    struct gpiod_line_bulk *bulkEvents
+);
+
 int Gpio_waitForLineChange(
     struct GpioLine* line1, 
     struct gpiod_line_bulk *bulkEvents
