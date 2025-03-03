@@ -434,7 +434,8 @@ void* putTogether_lightSensor_thread(void* arg){
         putTogether_updateLightDips();
 
         // sleep for 1 ms per sample
-        milisecondSleep(1);
+        // it already runs way too slow
+        //milisecondSleep(1);
     }
 
     // loop done, tell the thread that

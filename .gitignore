@@ -1,2 +1,7 @@
 build/
-*.Zone.Identifier
+
+{
+  "files.exclude": {
+    "**:Zone.Identifier": true
+  }
+}
